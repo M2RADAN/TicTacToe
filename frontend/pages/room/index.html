@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <script type="module" crossorigin src="../../js/main.js"></script>
+    <link rel="stylesheet" href="../../styles/style.css" />
+  </head>
+  <body>
+    <div
+      style="
+        margin: auto;
+        display: flex;
+        font-size: 2em;
+        justify-content: center;
+        padding: 1em;
+      "
+      id="app"
+    >
+      Комнаты:
+    </div>
+    <div class="testContainer">
+      <form id="createForm" class="formR">
+        <button class="testSubmit" type="submit" value="create">create</button>
+      </form>
+      <form id="joinForm" class="formR">
+        <input
+          id="roomidInput"
+          class="testInput"
+          type="text"
+          placeholder="input"
+        />
+        <button class="testSubmit" type="submit">join</button>
+      </form>
+    </div>
+
+    <!-- форма для отправки сообщений -->
+
+    <!-- здесь будут появляться входящие сообщения -->
+    <div id="testMessage" class="testContainer testMessage" id="message"></div>
+  </body>
+</html>

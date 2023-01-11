@@ -1,31 +1,56 @@
-console.log("Asffsa")
+import {io} from "socket.io-client"
 
-const wsConnection = new WebSocket("ws://localhost:8999");
-wsConnection.onopen = function() {
-    alert("Соединение установлено.");
-};
+const createForm = document.getElementById("createForm")
+const joinForm = document.getElementById("joinForm")
+createForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  fetch("/room", {
+    method: "POST",
+  }).then(res => res.json()).then(res => {
+    if (res.success ===  true) {
+      const socket = io("/", {
+        query: {
+          uid: res.id
+        }
+      })
+      socket.on('tictac', (message) =>
+        console.log('Message from server: ', message)
+      )
 
-wsConnection.onclose = function(event) {
-    if (event.wasClean) {
-        alert('Соединение закрыто чисто');
-    } else {
-        alert('Обрыв соединения'); // например, "убит" процесс сервера
+      document.getElementById("testMessage").innerHTML = `<b>${res.id}</b>`
     }
-    alert('Код: ' + event.code + ' причина: ' + event.reason);
-    console.log(event)
-};
+  })
+})
 
-wsConnection.onerror = function(error) {
-    alert("Ошибка " + error.message);
-};
+joinForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  console.log(document.getElementById("roomidInput").value)
+  const socket = io("/", {
+        query: {
+          uid: document.getElementById("roomidInput").value
+        }
+      })
+  socket.on('tictac', (message) =>
+    console.log('Message from server: ', message)
+  )
 
- const wsSend = function(data) {
-// readyState - true, если есть подключение
-    if(!wsConnection.readyState){
-        setTimeout(function (){
-            wsSend(data);
-        },100);
-    } else {
-        wsConnection.send(data);
-    }
-};
+})
+
+// const socket = io("/", {
+//   query: {
+//     "uid": "abc"
+//   }
+// })
+// socket.on('tictac', (message) =>
+//   console.log('Message from server: ', message)
+// )
+
+
+// function sendMessageToServer() {
+//   socket.emit('message', "I'm client")
+// }
+
+// window.addEventListener("click", () => {
+//   console.log("222")
+//   socket.emit("message", "this is some msg")
+// })

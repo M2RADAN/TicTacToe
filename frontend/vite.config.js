@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         another: resolve(__dirname, 'pages/another/index.html'),
+        room: resolve(__dirname, 'pages/room/index.html'),
         "500": resolve(__dirname, 'pages/500.html'),
       },
     },
