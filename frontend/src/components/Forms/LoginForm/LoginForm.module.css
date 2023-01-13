@@ -1,0 +1,10 @@
+.form {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+	align-self: center;
+	gap: 40px;
+}
+
+

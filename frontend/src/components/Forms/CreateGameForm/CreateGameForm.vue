@@ -11,7 +11,7 @@
 	<form @submit.prevent :class="css.form">
 		<div :class="css.form__btns">
 			<Button type="submit">Создать игру</Button>
-			<Button type="submit">Начать игру</Button>
+			<Button >Начать игру</Button>
 		</div>
 
 		<CopyField :content="copyContent" :class="css.form__copy" />
