@@ -29,6 +29,6 @@
 
 <template>
 	<p :class="classes" @click="onClickHandler" v-if="content">
-		{{ content }}<img :class="css.copy__img" src="copy.svg" alt="copy" />
+		{{ content }}<img :class="css.copy__img" src="../../../../public/copy.svg" alt="copy" />
 	</p>
 </template>

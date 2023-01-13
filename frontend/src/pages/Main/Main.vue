@@ -27,10 +27,10 @@
 		<img src ="logo.png" :class ="css.logo">
 		<div :class="css.logo__text">TicTacToe</div>
 		<main :class="css.main">
+
 			<div :class="css.main__auth">
 				<Button  @click="openLoginTrigger">Вход</Button>
 				<Button @click="openRegisterTrigger">Регистрация</Button>
-				
 			</div>
 			<Button @click="openNewGameTrigger">Создать новую игру</Button>
 			<Button @click="openConnectTrigger">Присоединиться</Button>
