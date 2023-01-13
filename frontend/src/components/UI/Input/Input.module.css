@@ -1,0 +1,9 @@
+.input {
+	padding: 5px 10px;
+	font-size: 1.2rem;
+	line-height: 1em;
+	font-family: inherit;
+	border-radius: 5px;
+	border: 2px solid var(--content_color_base);
+	background: none;
+}

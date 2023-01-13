@@ -1,0 +1,17 @@
+.form {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	align-self: center;
+	gap: 40px;
+}
+
+.form__copy {
+	font-size: 1.5rem;
+}
+
+.form__btns {
+	display: flex;
+	gap: 15px;
+}

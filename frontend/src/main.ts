@@ -1,12 +1,19 @@
 import { createApp } from "vue";
-import "./style.css";
-import "./normalize.css";
+import "./style/style.css";
+import "./style/normalize.css";
+
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "./App.vue";
-import Board from "./components/Board/Board.vue";
+import Game from "./pages/Game/Game.vue";
+import Main from "./pages/Main/Main.vue";
+import LoginForm from "./components/Forms/LoginForm/LoginForm.vue";
 
-const routes = [{ path: "/game", component: Board }];
+const routes = [
+	{ path: "/game", component: Game },
+	{ path: "/login", component: LoginForm },
+	{ path: "/", component: Main },
+];
 
 const router = createRouter({
 	history: createWebHistory(),

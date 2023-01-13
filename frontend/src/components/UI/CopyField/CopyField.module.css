@@ -1,0 +1,30 @@
+.copy {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	height: 1em;
+	margin: 0;
+}
+
+.copy__img {
+	height: 100%;
+}
+
+.copy__animation {
+	animation: bounce 0.2s cubic-bezier(0.5, 0, 0.5, 1);
+}
+
+@keyframes bounce {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}

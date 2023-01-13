@@ -1,0 +1,30 @@
+.btn {
+	font-size: 1.5rem;
+	font-family: inherit;
+	border: none;
+	padding: 5px 40px;
+	cursor: pointer;
+
+	border-radius: 8px;
+	background: #ebf2fa;
+	box-shadow: 5px 5px 5px #dbe1e9, -5px -5px 5px #fbffff;
+	color: inherit;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.btn:active {
+	background: #ebf2fa;
+	box-shadow: inset 5px 5px 5px #dbe1e9, inset -5px -5px 5px #fbffff;
+}
+
+.link {
+	text-decoration: none;
+	color: inherit;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
