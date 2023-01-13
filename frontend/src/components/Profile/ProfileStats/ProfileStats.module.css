@@ -1,0 +1,26 @@
+
+.stats {
+	border-radius: 10px;
+	background: #ebf2fa;
+	box-shadow:  5px 5px 10px #dfe6ee,
+				-5px -5px 10px #f7feff;
+	width: clamp(300px, 30vw, 200px);
+	min-height: 150px;
+
+	z-index: 1000;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+}
+P {
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+.logo {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+}
