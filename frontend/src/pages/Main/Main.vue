@@ -18,7 +18,10 @@
 <template>
 	<div :class="css.main__wrapper">
 		<main :class="css.main">
-			<Link to="/login">Вход</Link>
+			<div class="">
+				<Link to="/login">Вход</Link>
+				<Link to="/login">Вход</Link>
+			</div>
 			<Button @click="openNewGameTrigger">Создать новую игру</Button>
 			<Button @click="openConnectTrigger">Присоединиться</Button>
 
