@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { inject, ref } from "vue";
 	import CreateGameForm from "../../components/Forms/CreateGameForm/CreateGameForm.vue";
 	import ConnectGameForm from "../../components/Forms/ConnectGameForm/ConnectGameForm.vue";
 
@@ -8,36 +8,32 @@
 	import css from "./Main.module.css";
 	import LoginForm from "../../components/Forms/LoginForm/LoginForm.vue";
 	import Stats from "../../components/Profile/ProfileStats/ProfileStats.vue";
-	const isNewGameOpen = ref(false);
-	const isConnectOpen = ref(false);
-	const isRegisterOpen = ref(false);
-	const isLoginOpen = ref(false);
+	import logo from "../../../assets/logo.png";
 
-	const openNewGameTrigger = () => (isNewGameOpen.value = !isNewGameOpen.value);
-	const openConnectTrigger = () => (isConnectOpen.value = !isConnectOpen.value);
-	const openRegisterTrigger = () => (isRegisterOpen.value = !isRegisterOpen.value);
-	const openLoginTrigger = () => (isLoginOpen.value = !isLoginOpen.value);
+	const modals = ref([false, false, false, false]);
+
+	const triggerModal = (index: number) => (modals.value[index] = !modals.value[index]);
 </script>
 
 <template>
+	<Stats />
 	<div :class="css.main__wrapper">
-		<div :class="css.profile">
-			<Stats />
-		</div>
-		<img src ="logo.png" :class ="css.logo">
-		<div :class="css.logo__text">TicTacToe</div>
+		<figure :class="css.logo">
+			<img :src="logo" :class="css.logo__img" />
+			<figcaption :class="css.logo__text">TicTacToe</figcaption>
+		</figure>
 		<main :class="css.main">
-
 			<div :class="css.main__auth">
-				<Button  @click="openLoginTrigger">Вход</Button>
-				<Button @click="openRegisterTrigger">Регистрация</Button>
+				<Button @click="triggerModal(0)">Вход</Button>
+				<Button @click="triggerModal(1)">Регистрация</Button>
 			</div>
-			<Button @click="openNewGameTrigger">Создать новую игру</Button>
-			<Button @click="openConnectTrigger">Присоединиться</Button>
-			<Modal :isOpen="isRegisterOpen" @close="openRegisterTrigger"><LoginForm text = "Регистрация"/></Modal>
-			<Modal :isOpen="isLoginOpen" @close="openLoginTrigger"><LoginForm text = "Логин"/></Modal>
-			<Modal :isOpen="isNewGameOpen" @close="openNewGameTrigger"><CreateGameForm /></Modal>
-			<Modal :isOpen="isConnectOpen" @close="openConnectTrigger"><ConnectGameForm /></Modal>
+			<Button @click="triggerModal(2)">Создать новую игру</Button>
+			<Button @click="triggerModal(3)">Присоединиться</Button>
+
+			<Modal :isOpen="modals[0]" @close="triggerModal(0)"><LoginForm type="Вход" /></Modal>
+			<Modal :isOpen="modals[1]" @close="triggerModal(1)"><LoginForm type="Регистрация" /></Modal>
+			<Modal :isOpen="modals[2]" @close="triggerModal(2)"><CreateGameForm /></Modal>
+			<Modal :isOpen="modals[3]" @close="triggerModal(3)"><ConnectGameForm /></Modal>
 		</main>
 	</div>
 </template>

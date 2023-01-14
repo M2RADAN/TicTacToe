@@ -1,9 +1,10 @@
 <script setup lang="ts">
 	import { computed, ref, watchEffect } from "vue";
 	import css from "./CopyField.module.css";
-
-	const { content } = defineProps<{
-		content?: string;
+	import copy from "../../../../assets/copy.svg";
+	import cons from "consolidate";
+	const props = defineProps<{
+		content?: string | null;
 	}>();
 
 	const isClicked = ref(false);
@@ -21,14 +22,17 @@
 
 	function onClickHandler() {
 		isClicked.value = true;
-		if ("clipboard" in navigator && content) {
-			navigator.clipboard.writeText(content);
+		if ("clipboard" in navigator && props.content) {
+			console.log("write");
+			navigator.clipboard.writeText(props.content);
+		} else {
+			console.error("non write", props.content, "clipboard" in navigator);
 		}
 	}
 </script>
 
 <template>
 	<p :class="classes" @click="onClickHandler" v-if="content">
-		{{ content }}<img :class="css.copy__img" src="../../../../public/copy.svg" alt="copy" />
+		{{ content }}<img :class="css.copy__img" :src="copy" alt="copy" />
 	</p>
 </template>

@@ -1,16 +1,18 @@
-
 .stats {
 	border-radius: 10px;
 	background: #ebf2fa;
-	box-shadow:  5px 5px 10px #dfe6ee,
-				-5px -5px 10px #f7feff;
-	width: clamp(300px, 30vw, 200px);
+	box-shadow: 5px 5px 10px #dfe6ee, -5px -5px 10px #f7feff;
+
+	width: clamp(200px, 30vw, 300px);
 	min-height: 150px;
 
-	z-index: 1000;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: 1fr 1fr 1fr;
+
+	position: fixed;
+	left: 30px;
+	top: 30px;
 }
 P {
 	margin: 0;

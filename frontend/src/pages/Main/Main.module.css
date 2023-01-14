@@ -11,31 +11,25 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
+	gap: 100px;
 }
 .main__auth {
 	display: flex;
 	justify-content: space-between;
 	gap: 10px;
 }
-.profile {
-	position: fixed;
-	left: 30px;
-	top: 30px;
 
-}
 .logo {
-	position: fixed;
-	left: 50%;
-	top: 10%;
-	transform: translate(-50%, -10%);
-	height: 128px;
+	text-align: center;
+}
+
+.logo__img {
 	width: 128px;
+	height: 128px;
 }
 .logo__text {
-	font-size: 60px;
+	font-size: 3rem;
 	font-weight: 600;
-	position: fixed;
-	left: 50%;
-	top: calc(10% + 128px);
-	transform: translate(-50%, -10%);
+	margin-top: 15px;
 }
