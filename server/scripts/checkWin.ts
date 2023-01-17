@@ -15,7 +15,7 @@ export function checkWin(board: TField[][]) {
 	const field = board.flat(1);
 	for (let i = 0; i < fc.length; i++) {
 		const attp = fc[i];
-		if (attp.some((el) => el === null)) continue;
+		if (attp.some((el) => field[el] === null)) continue;
 		if (field[attp[0]] === field[attp[1]] && field[attp[1]] === field[attp[2]]) {
 			return field[attp[0]];
 		}

@@ -103,6 +103,7 @@ export function createRoom(io: TSoket): ICreateRoom {
 				[null, null, null],
 			];
 			this.winner = null;
+			if (!this.players[0] || !this.players[1]) return;
 			this.players[0].moveable = true;
 			this.players[1].moveable = false;
 			this.sync();
