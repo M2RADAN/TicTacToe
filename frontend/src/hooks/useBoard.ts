@@ -1,17 +1,21 @@
-import { ref, reactive } from "vue";
-import { TCell } from "../types/game";
+import { inject } from "vue";
+import { socketKey, socketPropsKey } from "../constants/keys";
+import { TField } from "../types/game";
 
-export function useBoard() {
-	// ... useSoket functions
-	const playerRole = ref<TCell["state"]>("circle");
-	const canMove = ref(true);
-	const board = reactive<TCell[]>(Array.from({ length: 9 }, () => ({ state: null })));
+type TUseBoard = {
+	onCellClick(id: number[]): void;
+};
 
-	function onCellClick(id: number) {
-		if (!canMove.value) return;
-		board[id].state = playerRole.value;
-		canMove.value = true;
+export function useBoard(): TUseBoard {
+	const props = inject(socketPropsKey);
+	const socket = inject(socketKey);
+
+	function onCellClick(moveIndex: number[]) {
+		if (!props?.canMove || props.board[moveIndex[0]][moveIndex[1]] !== null) return;
+		props.board[moveIndex[0]][moveIndex[1]] = props.role;
+		props.canMove = false;
+		socket?.emit("move", moveIndex);
 	}
 
-	return { onCellClick, board };
+	return { onCellClick };
 }

@@ -1,5 +1,16 @@
 .nav {
 	display: flex;
+	align-items: center;
 	gap: 30px;
 	width: auto;
+}
+
+.nav__copy {
+	font-size: 1.1rem;
+	display: grid;
+	gap: 10px;
+}
+
+.nav__observer {
+	font-size: 1.1rem;
 }

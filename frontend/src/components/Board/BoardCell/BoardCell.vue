@@ -1,14 +1,15 @@
 <script setup lang="ts">
-	import type { TCell } from "../../../types/game";
+	import type { TField } from "../../../types/game";
 	import { BOARD_IMG } from "../../../constants/board";
 	import css from "./BoardCell.module.css";
+	import { onUpdated } from "vue";
 
-	defineProps<{
-		state: TCell["state"];
-		index: number;
+	const props = defineProps<{
+		state: TField;
+		index: number[];
 	}>();
 	defineEmits<{
-		(e: "cell-click", id: number): void;
+		(e: "cell-click", id: number[]): void;
 	}>();
 </script>
 

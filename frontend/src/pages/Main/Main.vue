@@ -9,19 +9,26 @@
 	import LoginForm from "../../components/Forms/LoginForm/LoginForm.vue";
 	import Stats from "../../components/Profile/ProfileStats/ProfileStats.vue";
 	import logo from "../../../assets/logo.png";
+	import { socketPropsKey } from "../../constants/keys";
+	import { useRouter } from "vue-router";
 
 	const modals = ref([false, false, false, false]);
+
+	const props = inject(socketPropsKey);
+	const router = useRouter();
 
 	const triggerModal = (index: number) => (modals.value[index] = !modals.value[index]);
 </script>
 
 <template>
 	<Stats />
+
 	<div :class="css.main__wrapper">
 		<figure :class="css.logo">
-			<img :src="logo" :class="css.logo__img" />
+			<img :src="logo" :class="css.logo__img" alt="TicTacToe" />
 			<figcaption :class="css.logo__text">TicTacToe</figcaption>
 		</figure>
+
 		<main :class="css.main">
 			<div :class="css.main__auth">
 				<Button @click="triggerModal(0)">Вход</Button>
@@ -29,6 +36,7 @@
 			</div>
 			<Button @click="triggerModal(2)">Создать новую игру</Button>
 			<Button @click="triggerModal(3)">Присоединиться</Button>
+			<Button v-if="props?.isConnected" @click="router.push('/game')">Продолжить игру</Button>
 
 			<Modal :isOpen="modals[0]" @close="triggerModal(0)"><LoginForm type="Вход" /></Modal>
 			<Modal :isOpen="modals[1]" @close="triggerModal(1)"><LoginForm type="Регистрация" /></Modal>

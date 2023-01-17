@@ -1,6 +1,19 @@
 <script setup lang="ts">
+	import { inject, ref, watchEffect } from "vue";
+	import { useRouter } from "vue-router";
 	import Board from "../../components/Board/Board.vue";
+	import RestartGame from "../../components/Forms/RestartGame/RestartGame.vue";
+	import Modal from "../../components/Modal/Modal.vue";
 	import Nav from "../../components/Nav/Nav/Nav.vue";
+	import { socketKey, socketPropsKey } from "../../constants/keys";
+
+	const router = useRouter();
+	const props = inject(socketPropsKey);
+	const socket = inject(socketKey);
+
+	watchEffect(() => {
+		if (props?.isConnected === false || !props?.roomId) router.push("/");
+	});
 </script>
 
 <template>
@@ -10,6 +23,8 @@
 		</header>
 		<Board />
 	</div>
+
+	<Modal :isOpen="!!props?.winner" @close="socket?.disconnect()"><RestartGame /></Modal>
 </template>
 
 <style scoped>

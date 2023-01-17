@@ -6,6 +6,7 @@
 	gap: 10px;
 	height: 1em;
 	margin: 0;
+	will-change: transform;
 }
 
 .copy__img {

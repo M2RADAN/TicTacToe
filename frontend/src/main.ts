@@ -8,7 +8,6 @@ import App from "./App.vue";
 import Game from "./pages/Game/Game.vue";
 import Main from "./pages/Main/Main.vue";
 
-
 const routes = [
 	{ path: "/game", component: Game },
 	{ path: "/", component: Main },

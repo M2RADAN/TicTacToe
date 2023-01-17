@@ -7,7 +7,7 @@
 </script>
 
 <template>
-	<form action="" @submit.prevent :class="css.form">
+	<form @submit.prevent :class="css.form">
 		<Input placeholder="Логин" />
 		<Input placeholder="Пароль" />
 		<Input v-if="type === 'Регистрация'" placeholder="Повтор пароля" />

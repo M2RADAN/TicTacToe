@@ -14,15 +14,11 @@
 	left: 30px;
 	top: 30px;
 }
-P {
+.stats__info,
+.stats__title {
 	margin: 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-}
-.logo {
-	position: fixed;
-	left: 50%;
-	top: 50%;
 }

@@ -9,8 +9,8 @@
 <template>
 	<section :class="css.stats">
 		<template v-for="(el, index) in titles">
-			<p>{{ el }}:</p>
-			<p>
+			<p :class="css.stats__title">{{ el }}:</p>
+			<p :class="css.stats__info">
 				{{ results[index] }}
 			</p>
 		</template>

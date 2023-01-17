@@ -1,4 +1,4 @@
 export const BOARD_IMG = {
-	cross: "./cross.svg",
-	circle: "./circle.svg",
+	cross: "./assets/cross.svg",
+	circle: "./assets/circle.svg",
 };
