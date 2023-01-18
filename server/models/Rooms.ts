@@ -11,7 +11,7 @@ export class Rooms {
 	}
 
 	createRoom(io: TSoket) {
-		const newRoom = createRoom(io);
+		const newRoom = createRoom(io, this);
 		this.rooms.push(newRoom);
 		return [newRoom.id, newRoom.observerId];
 	}
@@ -24,7 +24,7 @@ export class Rooms {
 	}
 }
 
-export function createRoom(io: TSoket): ICreateRoom {
+export function createRoom(io: TSoket, inst: Rooms): ICreateRoom {
 	if (!io) throw new Error("Err");
 
 	return {
@@ -38,7 +38,7 @@ export function createRoom(io: TSoket): ICreateRoom {
 				role = this.players.length ? "circle" : "cross";
 				this.players.push({
 					id: memberId,
-					moveable: !this.players.length,
+					moveable: !this.players[0] ?  Math.random() > 0.5 : !this.players[0].moveable,
 					role,
 				});
 			} else {
@@ -54,6 +54,15 @@ export function createRoom(io: TSoket): ICreateRoom {
 		removeClient(memberId) {
 			this.players = this.players.filter((el) => el.id !== memberId);
 			this.observers = this.observers.filter((el) => el.id !== memberId);
+			if (!this.players.length) {
+				this.ioInstance.sockets.forEach((el) => {
+					const client = this.observers.find((a) => a.id == el.id)
+					if (client) {
+						el.disconnect();
+					}
+				})
+			
+			}
 		},
 
 		emitSubscribers(name, msg) {
@@ -104,8 +113,8 @@ export function createRoom(io: TSoket): ICreateRoom {
 			];
 			this.winner = null;
 			if (!this.players[0] || !this.players[1]) return;
-			this.players[0].moveable = true;
-			this.players[1].moveable = false;
+			this.players[0].moveable = Math.random() > 0.5 ;
+			this.players[1].moveable = !this.players[0].moveable;
 			this.sync();
 		},
 

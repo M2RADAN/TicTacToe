@@ -24,8 +24,22 @@
 		if ("clipboard" in navigator && props.content) {
 			navigator.clipboard.writeText(props.content);
 		} else {
-			console.error("non write ", props.content, "clipboard" in navigator);
+			copyText();
 		}
+	}
+	
+	function copyText() {
+		const inp = document.createElement("input");
+		inp.style.position = "absolute";
+		inp.style.top = "-9999999px";
+		inp.style.left = "-9999999px";
+		inp.style.opacity = "0";
+		inp.value = props.content || "";
+		document.body.appendChild(inp)
+		inp.select()
+		document.execCommand("copy");
+		document.body.removeChild(inp);
+
 	}
 </script>
 

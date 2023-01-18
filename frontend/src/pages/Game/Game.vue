@@ -12,7 +12,11 @@
 	const socket = inject(socketKey);
 
 	watchEffect(() => {
-		if (props?.isConnected === false || !props?.roomId) router.push("/");
+
+		if (props?.isConnected === false || !props?.roomId) {
+			alert("Игра окончена или");
+			router.push("/");
+		}
 	});
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { inject, ref } from "vue";
+	import { inject, reactive, ref, watchEffect } from "vue";
 	import CreateGameForm from "../../components/Forms/CreateGameForm/CreateGameForm.vue";
 	import ConnectGameForm from "../../components/Forms/ConnectGameForm/ConnectGameForm.vue";
 
@@ -11,17 +11,44 @@
 	import logo from "../../../assets/logo.png";
 	import { socketPropsKey } from "../../constants/keys";
 	import { useRouter } from "vue-router";
+import { IStats } from "../../types/game";
 
+
+	
 	const modals = ref([false, false, false, false]);
+
+	const stats = reactive<IStats>({
+		ties: 0,
+		wins: 0,
+		loses: 0,
+		total: 0
+	})
 
 	const props = inject(socketPropsKey);
 	const router = useRouter();
 
+
+
 	const triggerModal = (index: number) => (modals.value[index] = !modals.value[index]);
+
+	watchEffect(() => {
+		fetch("/userInfo", {
+			method: "POST",
+			headers: {
+				authorization: "Bearer " + localStorage.getItem("token")
+			}
+		}).then(res=>res.json()).then((res: IStats) => {
+			stats.loses = res.loses;
+			stats.ties = res.ties;
+			stats.total = res.total;
+			stats.wins = res.wins;
+		})
+	})
+
 </script>
 
 <template>
-	<Stats />
+	<Stats :stats="stats"/>
 
 	<div :class="css.main__wrapper">
 		<figure :class="css.logo">

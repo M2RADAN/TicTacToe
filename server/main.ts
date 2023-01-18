@@ -8,6 +8,9 @@ import bodyParser from "body-parser";
 import { Rooms } from "./models/Rooms";
 import cors from "cors";
 import { serverCros, corsOptions } from "./constants/cros";
+import { DataBase, privateKey } from "./models/Bd";
+import jwt from "jsonwebtoken";
+
 
 const port = 3000;
 const app = express();
@@ -18,6 +21,7 @@ const httpIO = io.of("/");
 export type TSoket = typeof httpIO;
 
 const Games = new Rooms();
+const DB = new DataBase();
 
 app.engine("html", cons.swig);
 app.set("views", path.join(path.resolve(), "views"));
@@ -85,3 +89,31 @@ app.get("/**", (req, res) => {
 server.listen(port, () => {
 	console.log(`App listening on port ${port}`);
 });
+
+app.post("/register", (req, res) => {
+	try {
+		console.log(req.body.login, req.body)
+		const token = DB.createUser(req.body.login, req.body.password);
+
+		res.json({ token, success: true });
+		res.status(200);
+	} catch (e) {
+		res.json({ success: false });
+		res.status(500);
+	}
+});
+
+
+
+app.post("/userInfo", (req, res) => {
+	try {
+		jwt.verify(req.headers.authorization?.split(" ")[1] || "", privateKey, (err, id) => {
+			res.json({stats: DB.getUser(id?.toString() || "")?.stats})
+		})
+		res.send();
+	} catch (e) {
+		res.json({success: false})
+
+	}
+
+})

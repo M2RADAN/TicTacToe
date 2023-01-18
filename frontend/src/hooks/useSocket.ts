@@ -16,7 +16,7 @@ export function useSocket() {
 	});
 
 	const socketInst = new SocketConnection(URL_BASE, gameProps);
-
+	
 	provide(socketKey, socketInst);
 	provide(socketPropsKey, gameProps);
 }

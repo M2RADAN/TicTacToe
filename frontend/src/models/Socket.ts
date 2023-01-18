@@ -69,7 +69,8 @@ export class SocketConnection {
 		this.socket?.disconnect();
 	}
 
-	async restartGame() {
+	restartGame() {
+		console.log(this)
 		this.emit("restart", this.props.roomId);
 	}
 
