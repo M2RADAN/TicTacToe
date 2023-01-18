@@ -32,13 +32,15 @@ export class DataBase {
     })
 
     }
-
+    hmacPass(password: string) {
+      return createHmac('sha256', password).digest('hex');
+    }
     createUser(login: string, password: string) {
       const uid = uuid()
        const newUser = {
         id: uid,
         login,
-        hashPass: createHmac('sha256', password).digest('hex'),
+        hashPass: this.hmacPass(password),
         stats: {
             wins: 0,
             loses: 0,

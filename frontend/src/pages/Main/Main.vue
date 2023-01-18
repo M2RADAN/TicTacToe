@@ -11,14 +11,14 @@
 	import logo from "../../../assets/logo.png";
 	import { socketPropsKey } from "../../constants/keys";
 	import { useRouter } from "vue-router";
-import { IStats } from "../../types/game";
+	import { IStats } from "../../types/game";
 
 
 	
 	const modals = ref([false, false, false, false]);
 
 	const stats = reactive<IStats>({
-		ties: 0,
+		ties: 1,
 		wins: 0,
 		loses: 0,
 		total: 0

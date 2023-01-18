@@ -10,6 +10,7 @@ import cors from "cors";
 import { serverCros, corsOptions } from "./constants/cros";
 import { DataBase, privateKey } from "./models/Bd";
 import jwt from "jsonwebtoken";
+import e from "express";
 
 
 const port = 3000;
@@ -93,12 +94,36 @@ server.listen(port, () => {
 app.post("/register", (req, res) => {
 	try {
 		console.log(req.body.login, req.body)
-		const token = DB.createUser(req.body.login, req.body.password);
-
-		res.json({ token, success: true });
-		res.status(200);
+		if(!DB.findUser(req.body.login)) {
+			const token = DB.createUser(req.body.login, req.body.password);
+			res.json({ token, success: true });
+			res.status(200);
+		} else {
+			res.json({ success: false, message: "Пользователь уже зарегестрирован!" });
+		}
 	} catch (e) {
-		res.json({ success: false });
+		res.json({ success: false, message: "в catch(e) поймал ебалом" });
+		res.status(500);
+	}
+});
+
+app.post("/login", (req, res) => {
+	try {
+		console.log(req.body.login, req.body)
+		const userL =DB.findUser(req.body.login);
+		if(userL && DB.hmacPass(req.body.password) === userL.hashPass) {
+			
+				const token = DB.findUser(req.body.login);
+				console.log(token?.login);
+				res.json({ token, success: true });
+				res.status(200);
+
+			
+		} else {
+			res.json({ success: false, message: "Неправильный логин или пароль!" });
+		}
+	} catch (e) {
+		res.json({ success: false, message: "в catch(e) поймал ебалом" });
 		res.status(500);
 	}
 });
@@ -112,8 +137,11 @@ app.post("/userInfo", (req, res) => {
 		})
 		res.send();
 	} catch (e) {
+
 		res.json({success: false})
+		console.log('nea');
 
 	}
 
 })
+
