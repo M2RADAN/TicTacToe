@@ -27,7 +27,8 @@ export class SocketConnection {
 	}
 
 	connect(callback?: TCallback, options?: Partial<ManagerOptions & SocketOptions>) {
-		if (this.props.isConnected === true) return console.error("Игрок уже подключен к другой сессии");
+		if (this.props.isConnected === true)
+			return console.error("Игрок уже подключен к другой сессии");
 
 		this.socket = io(this.url, options);
 
@@ -74,7 +75,7 @@ export class SocketConnection {
 		this.emit("restart", this.props.roomId);
 	}
 
-	async createRoom() {
+	async createRoom(callback?: () => void) {
 		const res: TResponse = await (
 			await fetch(`${URL_BASE}/newRoom`, {
 				method: "POST",
@@ -82,6 +83,7 @@ export class SocketConnection {
 		).json();
 
 		if (res.success) {
+			callback && callback();
 			this.props.roomId = res.id || null;
 			this.props.observerId = res.observerId || null;
 			return res.id || null;

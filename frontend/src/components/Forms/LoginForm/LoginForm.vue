@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { inject, ref } from "vue";
+	import { inject, onErrorCaptured, ref } from "vue";
 	import { useQuery } from "../../../hooks/useQuery";
 	import Button from "../../UI/Button/Button.vue";
 	import Input from "../../UI/Input/Input.vue";
@@ -34,7 +34,7 @@
 				password: pass.value,
 			});
 
-		if (typeof res === "string") return;
+		if (typeof res === "string") throw Error(res);
 
 		if (res.success) emit("close");
 		if (auth?.token) auth.token.value = res.token || null;

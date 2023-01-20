@@ -4,11 +4,24 @@
 	import css from "./Toast.module.css";
 
 	const toasts = inject(toastKey);
-	const timers = ref<{ id: number; timer: number }[]>([]);
+	const timers = ref<{ id: string; timer: NodeJS.Timeout }[]>([]);
+
+	function deleteToast(id: string) {
+		if (!toasts) return;
+		toasts.value = toasts.value.filter((el) => el.id !== id);
+		timers.value = timers.value.filter((el) => el.id !== id);
+	}
 
 	watch(
 		() => toasts?.value,
-		() => {} // TODO:  toasts delete
+		() => {
+			toasts?.value.forEach((el, i) => {
+				const findEl = timers.value.find((a) => a.id === el.id);
+				if (!findEl) {
+					timers.value.push({ id: el.id, timer: setTimeout(() => deleteToast(el.id), 5000) });
+				}
+			});
+		}
 	);
 </script>
 
@@ -17,14 +30,14 @@
 		<div :class="css.toasts">
 			<TransitionGroup name="toasts">
 				<div
-					v-for="(el, index) in toasts?.reverse()"
+					v-for="el in toasts"
 					:key="el.id"
 					:class="[css.toasts__item, css[`toasts_${el.style}`]]"
 				>
 					<p :class="css.toast__info">
 						{{ el.message }}
 					</p>
-					<button :class="css.toast__button">&times;</button>
+					<button :class="css.toast__button" @click="deleteToast(el.id)">&times;</button>
 				</div>
 			</TransitionGroup>
 		</div>

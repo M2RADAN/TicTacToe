@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { provide, ref } from "vue";
+	import { onErrorCaptured, provide, ref } from "vue";
 	import { RouterView } from "vue-router";
 	import Toast from "./components/Toast/Toast.vue";
 	import { toastKey } from "./constants/keys";

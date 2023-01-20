@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { inject, onMounted, ref } from "vue";
+	import { inject, onErrorCaptured, onMounted, ref } from "vue";
 	import CreateGameForm from "../../components/Forms/CreateGameForm/CreateGameForm.vue";
 	import ConnectGameForm from "../../components/Forms/ConnectGameForm/ConnectGameForm.vue";
 
@@ -19,6 +19,7 @@
 	const props = inject(socketPropsKey);
 	const router = useRouter();
 	const auth = inject(authKey);
+
 	const addToast = useToast();
 
 	function logOut() {
@@ -29,6 +30,11 @@
 
 	onMounted(() => {
 		auth?.forceUpdate();
+	});
+
+	onErrorCaptured((err) => {
+		addToast(err.message, "error");
+		return false;
 	});
 </script>
 
@@ -44,7 +50,7 @@
 		<main :class="css.main">
 			<template v-if="!auth?.token.value">
 				<div :class="css.main__auth">
-					<Button @click="() => addToast('Test text')">Вход</Button>
+					<Button @click="triggerModal(0)">Вход</Button>
 					<Button @click="triggerModal(1)">Регистрация</Button>
 				</div>
 			</template>

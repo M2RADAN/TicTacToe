@@ -38,14 +38,14 @@
 	background-color: #006faa;
 }
 
-.toast__error {
+.toasts_error {
 	background-color: #bc2727;
 }
 
-.toast__info {
+.toasts_info {
 	background-color: #006faa;
 }
 
-.toast__success {
+.toasts_success {
 	background-color: #2b742e;
 }
