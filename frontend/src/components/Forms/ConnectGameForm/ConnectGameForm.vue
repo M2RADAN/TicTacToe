@@ -20,8 +20,8 @@
 </script>
 
 <template>
-	<form @submit.prevent="conncetGame" :class="css.form">
-		<Input v-model="id" type="text" :placeholder="'Введите id комнаты'" :class="css.form__input" />
+	<form @submit.prevent="conncetGame" :class="css.form" >
+		<Input autofocus="true" v-model="id" type="text" :placeholder="'Введите id комнаты'" :class="css.form__input" />
 		<Button type="submit" :disabled="!id">Подключиться</Button>
 	</form>
 </template>

@@ -32,6 +32,11 @@ export class DataBase {
     })
 
     }
+
+    createToken(id: string) {
+      return jwt.sign(id, privateKey)
+
+    }
     hmacPass(password: string) {
       return createHmac('sha256', password).digest('hex');
     }
@@ -51,7 +56,7 @@ export class DataBase {
        }
        this.userBD[uid] = newUser;
        this.writeJson();
-       return jwt.sign(newUser.id, privateKey)
+       return this.createToken(newUser.id)
     }
 
     updateUser(id: string, result: "loses" | "wins" | "ties") {

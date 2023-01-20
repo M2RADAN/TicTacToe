@@ -1,5 +1,5 @@
-import { provide, reactive, ref } from "vue";
-import { socketKey, socketPropsKey, URL_BASE } from "../constants/keys";
+import { provide, reactive, ref, inject } from "vue";
+import { authKey, socketKey, socketPropsKey, URL_BASE } from "../constants/keys";
 import { SocketConnection } from "../models/Socket";
 import { TSocketProps } from "../types/socket";
 
@@ -15,7 +15,9 @@ export function useSocket() {
 		isObserver: null,
 	});
 
-	const socketInst = new SocketConnection(URL_BASE, gameProps);
+	const auth = inject(authKey)
+
+	const socketInst = new SocketConnection(URL_BASE, gameProps, auth?.token || undefined);
 	
 	provide(socketKey, socketInst);
 	provide(socketPropsKey, gameProps);

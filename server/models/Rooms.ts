@@ -34,11 +34,13 @@ export function createRoom(io: TSoket, inst: Rooms): ICreateRoom {
 		addClient(memberId, connectId) {
 			let role: "circle" | "cross" | null = null;
 			let isObserver = false;
+			let canMove: boolean = false;
 			if (connectId === this.id && this.players.length < 2) {
+				canMove = !this.players[0] ?  Math.random() > 0.5 : !this.players[0].moveable;
 				role = this.players.length ? "circle" : "cross";
 				this.players.push({
 					id: memberId,
-					moveable: !this.players[0] ?  Math.random() > 0.5 : !this.players[0].moveable,
+					moveable: canMove,
 					role,
 				});
 			} else {
@@ -49,7 +51,7 @@ export function createRoom(io: TSoket, inst: Rooms): ICreateRoom {
 				});
 			}
 
-			return [this.players.length !== 2, role, isObserver];
+			return [canMove, role, isObserver];
 		},
 		removeClient(memberId) {
 			this.players = this.players.filter((el) => el.id !== memberId);

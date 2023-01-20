@@ -14,7 +14,7 @@ let corsOptions: CorsOptions | CorsOptionsDelegate | undefined;
 if (process.argv[2] === "dev") {
 	serverCros = {
 		cors: {
-			origin: "http://localhost:5173",
+			origin: "http://10.193.175.243:5173",
 			methods: ["GET", "POST"],
 		},
 	};

@@ -7,48 +7,49 @@
 	import Button from "../../components/UI/Button/Button.vue";
 	import css from "./Main.module.css";
 	import LoginForm from "../../components/Forms/LoginForm/LoginForm.vue";
-	import Stats from "../../components/Profile/ProfileStats/ProfileStats.vue";
+	import ProfileStats from "../../components/Profile/ProfileStats/ProfileStats.vue";
 	import logo from "../../../assets/logo.png";
-	import { socketPropsKey } from "../../constants/keys";
+	import { authKey, socketPropsKey} from "../../constants/keys";
 	import { useRouter } from "vue-router";
-	import { IStats } from "../../types/game";
+	import { DefaultStats } from "../../constants/board"
+import { IStats } from "../../types/game";
+import { useQuery } from "../../hooks/useQuery";
+import { eraseCookie } from "../../utils/cookies";
 
 
 	
 	const modals = ref([false, false, false, false]);
 
-	const stats = reactive<IStats>({
-		ties: 1,
-		wins: 0,
-		loses: 0,
-		total: 0
-	})
 
 	const props = inject(socketPropsKey);
 	const router = useRouter();
+	const authInfo = inject(authKey);
+	let stats = reactive<IStats>(DefaultStats)
 
+	const statsQuery = useQuery<IStats>("/userInfo", "POST");
+	watchEffect(() => {
+		if (!authInfo?.token) return;
+		statsQuery.toFetch({}, authInfo?.token || "").then(res => {
+    if (typeof res === "string") return;
+		stats.loses = res.loses
+		stats.ties = res.ties
+		stats.wins = res.wins
+		stats.total = res.total
+  })
+	})
+
+	function logOut () {
+		eraseCookie("token")
+		window.location.reload();
+	}
 
 
 	const triggerModal = (index: number) => (modals.value[index] = !modals.value[index]);
 
-	watchEffect(() => {
-		fetch("/userInfo", {
-			method: "POST",
-			headers: {
-				authorization: "Bearer " + localStorage.getItem("token")
-			}
-		}).then(res=>res.json()).then((res: IStats) => {
-			stats.loses = res.loses;
-			stats.ties = res.ties;
-			stats.total = res.total;
-			stats.wins = res.wins;
-		})
-	})
-
 </script>
 
 <template>
-	<Stats :stats="stats"/>
+	<ProfileStats :stats="stats"/>
 
 	<div :class="css.main__wrapper">
 		<figure :class="css.logo">
@@ -57,18 +58,21 @@
 		</figure>
 
 		<main :class="css.main">
+			<template v-if="!authInfo?.isAuth">
 			<div :class="css.main__auth">
 				<Button @click="triggerModal(0)">Вход</Button>
 				<Button @click="triggerModal(1)">Регистрация</Button>
 			</div>
+			</template>
+			<Button v-else @click="logOut">Выход</Button>
 			<Button @click="triggerModal(2)">Создать новую игру</Button>
 			<Button @click="triggerModal(3)">Присоединиться</Button>
 			<Button v-if="props?.isConnected" @click="router.push('/game')">Продолжить игру</Button>
 
-			<Modal :isOpen="modals[0]" @close="triggerModal(0)"><LoginForm type="Вход" /></Modal>
-			<Modal :isOpen="modals[1]" @close="triggerModal(1)"><LoginForm type="Регистрация" /></Modal>
+			<Modal :isOpen="modals[0]" @close="triggerModal(0)"><LoginForm @close="triggerModal(0)" type="Вход" /></Modal>
+			<Modal :isOpen="modals[1]" @close="triggerModal(1)"><LoginForm @close="triggerModal(1)" type="Регистрация" /></Modal>
 			<Modal :isOpen="modals[2]" @close="triggerModal(2)"><CreateGameForm /></Modal>
-			<Modal :isOpen="modals[3]" @close="triggerModal(3)"><ConnectGameForm /></Modal>
+			<Modal :isOpen="modals[3]" @close="triggerModal(3)"><ConnectGameForm/></Modal>
 		</main>
 	</div>
 </template>

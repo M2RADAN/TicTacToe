@@ -1,9 +1,9 @@
 <script setup lang="ts">
-	import { ref } from "vue";
+	import { onUpdated, ref } from "vue";
 	import { IStats } from "../../../types/game";
 	import css from "./ProfileStats.module.css";
 
-	defineProps<{stats: IStats}>()
+	const props = defineProps<{stats: IStats}>()
 	const titles = ref(["Выиграл", "Проиграл", "Всего"]);
 
 </script>
