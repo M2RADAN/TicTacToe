@@ -92,6 +92,7 @@ export class SocketConnection {
 	}
 
 	async updateWins() {
+		console.log("update1");
 		await fetch(`${URL_BASE}/updateStats`, {
 			method: "POST",
 			headers: {

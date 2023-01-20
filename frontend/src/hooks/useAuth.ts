@@ -13,6 +13,8 @@ export function useAuth() {
 	watchEffect(() => {
 		if (!token.value) return;
 		statsQuery.toFetch({}, token.value).then((res) => {
+			console.log(res);
+
 			if (typeof res === "string") return;
 			stats.value = res;
 		});

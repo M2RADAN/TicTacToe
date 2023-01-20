@@ -113,13 +113,13 @@ app.post("/login", (req, res) => {
 	try {
 		const userL = DB.findUser(req.body.login);
 		if (!(userL && DB.hmacPass(req.body.password) === userL.hashPass))
-			throw new Error("Пароль не верен!");
+			throw new Error("Пароль или логин не верен!");
 
 		const token = DB.createToken(userL.id);
 		res.json({ token, success: true });
 		res.status(200);
 	} catch (e) {
-		res.json({ success: false, message: "в catch(e) поймал ебалом" });
+		res.json({ success: false, message: (e as Error).message });
 		res.status(500);
 	}
 });
@@ -143,7 +143,7 @@ app.post("/updateStats", (req, res) => {
 			if (err) throw new Error("Не верный токен");
 			const roomId = req.body.id;
 			const winner = Games.getRoom(roomId)?.winner;
-
+			console.log(req.body, id);
 			let result: "ties" | "wins" | "loses";
 			if (winner === "tie") result = "ties";
 			else if (winner === req.body.role) result = "wins";

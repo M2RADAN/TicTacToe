@@ -37,7 +37,8 @@ export function useQuery<T>(url: string, method: "POST" | "GET") {
 				});
 			})
 			.then((res: T & { success: boolean; message: string }) => {
-				if (!res.success) throw Error(res.message);
+				console.log(res);
+				if (res.success === false) throw Error(res.message);
 				data.value = res as UnwrapRef<T>;
 				return res as UnwrapRef<T>;
 			})
