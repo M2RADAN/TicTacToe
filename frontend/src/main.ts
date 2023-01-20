@@ -7,7 +7,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import App from "./App.vue";
 import Game from "./pages/Game/Game.vue";
 import Main from "./pages/Main/Main.vue";
-import { authPlugin } from "./plugins/auth";
 
 const routes = [
 	{ path: "/game", component: Game },
@@ -21,6 +20,5 @@ const router = createRouter({
 
 const app = createApp(App);
 app.use(router);
-app.use(authPlugin);
 
 app.mount("#app");

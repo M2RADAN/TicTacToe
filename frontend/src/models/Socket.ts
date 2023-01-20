@@ -13,23 +13,17 @@ export class SocketConnection {
 	private url: string;
 	private props: TSocketReactive;
 	private socket: TSocket;
-	private token?: string;
 
-	constructor(url: string, props: TSocketReactive, token?: string) {
+	constructor(url: string, props: TSocketReactive) {
 		this.url = url;
 		this.props = props;
-		this.token = token;
 	}
 
 	private sync(props: TSyncResponse) {
-		console.log(props.canMove)
 		this.props.board = props.board;
 		this.props.canMove = props.canMove;
 		this.props.winner = props.winner;
-		if(props.winner) {
-			console.log("update")
-		this.updateWins()
-		}
+		if (props.winner) this.updateWins();
 	}
 
 	connect(callback?: TCallback, options?: Partial<ManagerOptions & SocketOptions>) {
@@ -96,18 +90,17 @@ export class SocketConnection {
 	}
 
 	async updateWins() {
-		console.log("update1")
-			await fetch(`${URL_BASE}/updateStats`, {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json',
-    			"Authorization": "Bearer " + this.token
-				},
-				body: JSON.stringify({
-					role: this.props.role,
-					id: this.props.roomId,
-				})
-			})
+		await fetch(`${URL_BASE}/updateStats`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + this.props.token,
+			},
+			body: JSON.stringify({
+				role: this.props.role,
+				id: this.props.roomId,
+			}),
+		});
 		return null;
 	}
 

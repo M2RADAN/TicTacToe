@@ -12,7 +12,6 @@ import { DataBase, privateKey } from "./models/Bd";
 import jwt from "jsonwebtoken";
 import e from "express";
 
-
 const port = 3000;
 const app = express();
 const server = createServer(app);
@@ -92,13 +91,13 @@ server.listen(port, () => {
 });
 
 app.post("/register", (req, res) => {
-
 	try {
 		const login = req.body.login;
 		const pass = req.body.password;
-		if (DB.findUser(req.body.login)) throw new Error("Пользователь уже зарегестрирован")
-		if (!(/\w{3,}/.test(login))) throw new Error("Не подходящий логин")
-		if (!(/.*(([A-Z].*\d)|(\d.*[A-Z])).*/.test(pass))) throw new Error("Не подходящий или слабый пароль")
+		if (DB.findUser(req.body.login)) throw new Error("Пользователь уже зарегестрирован");
+		if (!/\w{3,}/.test(login)) throw new Error("Не подходящий логин");
+		if (!/.*(([A-Z].*\d)|(\d.*[A-Z])).*/.test(pass))
+			throw new Error("Не подходящий или слабый пароль");
 
 		const token = DB.createUser(req.body.login, req.body.password);
 		res.json({ token, success: true });
@@ -106,63 +105,55 @@ app.post("/register", (req, res) => {
 	} catch (e) {
 		res.json({ success: false, message: (e as Error).message });
 		res.status(403);
-		alert(e)
+		alert(e);
 	}
 });
 
 app.post("/login", (req, res) => {
 	try {
 		const userL = DB.findUser(req.body.login);
-		if (!(userL && DB.hmacPass(req.body.password) === userL.hashPass)) throw new Error("Пароль не верен!")
-		
+		if (!(userL && DB.hmacPass(req.body.password) === userL.hashPass))
+			throw new Error("Пароль не верен!");
+
 		const token = DB.createToken(userL.id);
 		res.json({ token, success: true });
 		res.status(200);
-
 	} catch (e) {
 		res.json({ success: false, message: "в catch(e) поймал ебалом" });
 		res.status(500);
 	}
 });
 
-
-
-app.post("/userInfo",   (req, res) => {
+app.post("/userInfo", (req, res) => {
 	try {
-		if (!req.headers.authorization) throw Error("Не верный токен")
-		console.log(req.headers.authorization)
-			jwt.verify(req.headers.authorization?.split(" ")[1] || "", privateKey, (err, id) => {
-
-
-				if (err) throw new Error("Не верный токен")
-				res.status(200).json( DB.getUser(id?.toString() || "")?.stats)
-			})
-		console.log(2)
+		if (!req.headers.authorization) throw Error("Не верный токен");
+		jwt.verify(req.headers.authorization?.split(" ")[1] || "", privateKey, (err, id) => {
+			if (err) throw new Error("Не верный токен");
+			res.status(200).json(DB.getUser(id?.toString() || "")?.stats);
+		});
 	} catch (e) {
-		res.status(403).json({success: false, message: (e as Error).message})
+		res.status(403).json({ success: false, message: (e as Error).message });
 	}
-
-})
-
+});
 
 app.post("/updateStats", (req, res) => {
 	try {
-		if (!req.headers.authorization) throw Error("Не верный токен")
-			jwt.verify(req.headers.authorization?.split(" ")[1] || "", privateKey, (err, id) => {
-				if (err) throw new Error("Не верный токен");
-				const roomId = req.body.id
-				const winner = Games.getRoom(roomId)?.winner
+		if (!req.headers.authorization) throw Error("Не верный токен");
+		jwt.verify(req.headers.authorization?.split(" ")[1] || "", privateKey, (err, id) => {
+			if (err) throw new Error("Не верный токен");
+			const roomId = req.body.id;
+			const winner = Games.getRoom(roomId)?.winner;
 
-				let result: "ties" | "wins" | "loses";
-				if (winner === "tie") result = "ties"
-				else if (winner === req.body.role) result = "wins"
-				else result = "loses"
+			let result: "ties" | "wins" | "loses";
+			if (winner === "tie") result = "ties";
+			else if (winner === req.body.role) result = "wins";
+			else result = "loses";
 
-				if (winner) {
-					DB.updateUser(id as string, result);
-				}
-			})
+			if (winner) {
+				DB.updateUser(id as string, result);
+			}
+		});
 	} catch (e) {
-		res.status(403).json({ success: false, message: (e as Error).message })
+		res.status(403).json({ success: false, message: (e as Error).message });
 	}
-})
+});

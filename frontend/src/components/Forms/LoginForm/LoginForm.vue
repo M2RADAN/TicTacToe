@@ -1,12 +1,11 @@
 <script setup lang="ts">
-	import { ref } from "vue";
-	import { URL_BASE } from "../../../constants/keys";
+	import { inject, ref } from "vue";
 	import { useQuery } from "../../../hooks/useQuery";
 	import Button from "../../UI/Button/Button.vue";
 	import Input from "../../UI/Input/Input.vue";
 	import css from "./LoginForm.module.css";
-	import {IUserRequest} from "../../../types/login"
-import { setCookie } from "../../../utils/cookies";
+	import { IUserRequest } from "../../../types/login";
+	import { authKey } from "../../../constants/keys";
 
 	const props = defineProps<{ type: string }>();
 	const emit = defineEmits<{
@@ -17,27 +16,28 @@ import { setCookie } from "../../../utils/cookies";
 	const pass = ref<string>();
 	const repass = ref<string>();
 
-
 	const loginQuery = useQuery<IUserRequest>("/login", "POST");
-	const regQuery = useQuery<IUserRequest>("/register", "POST")
+	const regQuery = useQuery<IUserRequest>("/register", "POST");
+
+	const auth = inject(authKey);
 
 	async function LoginUser() {
 		let res: IUserRequest | string;
-		if (props.type === "Регистрация") res = await regQuery.toFetch({
+		if (props.type === "Регистрация")
+			res = await regQuery.toFetch({
 				login: login.value,
-				password: pass.value
-		});
-		else res = await loginQuery.toFetch({
+				password: pass.value,
+			});
+		else
+			res = await loginQuery.toFetch({
 				login: login.value,
-				password: pass.value
-			})
-		
+				password: pass.value,
+			});
+
 		if (typeof res === "string") return;
 
-		if(res.success) emit("close")
-		
-		setCookie("token", res.token || "")
-
+		if (res.success) emit("close");
+		if (auth?.token) auth.token.value = res.token || null;
 	}
 </script>
 
@@ -45,8 +45,12 @@ import { setCookie } from "../../../utils/cookies";
 	<form @submit.prevent="LoginUser" :class="css.form">
 		<Input autofocus="true" placeholder="Логин" v-model="login" type="text" />
 		<Input placeholder="Пароль" v-model="pass" type="password" />
-		<Input v-if="props.type === 'Регистрация'" placeholder="Повтор пароля" v-model="repass" type="password" />
-		<Button type="submit" >{{ props.type }}</Button>
+		<Input
+			v-if="props.type === 'Регистрация'"
+			placeholder="Повтор пароля"
+			v-model="repass"
+			type="password"
+		/>
+		<Button type="submit">{{ props.type }}</Button>
 	</form>
-
 </template>

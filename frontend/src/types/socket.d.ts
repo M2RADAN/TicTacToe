@@ -15,6 +15,7 @@ export interface TSocketProps {
 	observerId: string | null;
 	winner: null | TField | "tie";
 	isObserver: boolean | null;
+	token?: Ref<string | null>;
 }
 
 export type TSocketReactive = UnwrapNestedRefs<TSocketProps>;

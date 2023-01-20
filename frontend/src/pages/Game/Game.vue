@@ -12,8 +12,6 @@
 	const socket = inject(socketKey);
 
 	watchEffect(() => {
-
-
 		if (props?.isConnected === false || !props?.roomId) {
 			alert("Игра окончена или не существует");
 			router.push("/");

@@ -1,12 +1,13 @@
-import {IStats} from "./game"
+import { IStats } from "./game";
+import { Ref } from "vue";
 
 export interface IUserRequest {
-    success?: boolean;
-    token?: string;
+	success?: boolean;
+	token?: string;
 }
 
 export interface IUserProvide {
-  token?: string | null;
-  stats?: IStats;
-  isAuth: boolean;
+	token: Ref<string | null>;
+	stats: Ref<IStats>;
+	forceUpdate: () => void;
 }

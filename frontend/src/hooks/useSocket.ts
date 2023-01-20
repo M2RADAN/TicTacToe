@@ -1,9 +1,9 @@
-import { provide, reactive, ref, inject } from "vue";
-import { authKey, socketKey, socketPropsKey, URL_BASE } from "../constants/keys";
+import { provide, reactive, Ref, ref } from "vue";
+import { socketKey, socketPropsKey, URL_BASE } from "../constants/keys";
 import { SocketConnection } from "../models/Socket";
 import { TSocketProps } from "../types/socket";
 
-export function useSocket() {
+export function useSocket(token?: Ref<string | null>) {
 	const gameProps = reactive<TSocketProps>({
 		isConnected: false,
 		roomId: null,
@@ -13,12 +13,11 @@ export function useSocket() {
 		observerId: null,
 		winner: null,
 		isObserver: null,
+		token: token,
 	});
 
-	const auth = inject(authKey)
+	const socketInst = new SocketConnection(URL_BASE, gameProps);
 
-	const socketInst = new SocketConnection(URL_BASE, gameProps, auth?.token || undefined);
-	
 	provide(socketKey, socketInst);
 	provide(socketPropsKey, gameProps);
 }

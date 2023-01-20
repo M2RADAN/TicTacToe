@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { inject, reactive, ref, watchEffect } from "vue";
+	import { inject, onMounted, ref } from "vue";
 	import CreateGameForm from "../../components/Forms/CreateGameForm/CreateGameForm.vue";
 	import ConnectGameForm from "../../components/Forms/ConnectGameForm/ConnectGameForm.vue";
 
@@ -9,47 +9,31 @@
 	import LoginForm from "../../components/Forms/LoginForm/LoginForm.vue";
 	import ProfileStats from "../../components/Profile/ProfileStats/ProfileStats.vue";
 	import logo from "../../../assets/logo.png";
-	import { authKey, socketPropsKey} from "../../constants/keys";
+	import { authKey, socketPropsKey } from "../../constants/keys";
 	import { useRouter } from "vue-router";
-	import { DefaultStats } from "../../constants/board"
-import { IStats } from "../../types/game";
-import { useQuery } from "../../hooks/useQuery";
-import { eraseCookie } from "../../utils/cookies";
+	import { DefaultStats } from "../../constants/board";
+	import { useToast } from "../../hooks/useToast";
 
-
-	
 	const modals = ref([false, false, false, false]);
-
 
 	const props = inject(socketPropsKey);
 	const router = useRouter();
-	const authInfo = inject(authKey);
-	let stats = reactive<IStats>(DefaultStats)
+	const auth = inject(authKey);
+	const addToast = useToast();
 
-	const statsQuery = useQuery<IStats>("/userInfo", "POST");
-	watchEffect(() => {
-		if (!authInfo?.token) return;
-		statsQuery.toFetch({}, authInfo?.token || "").then(res => {
-    if (typeof res === "string") return;
-		stats.loses = res.loses
-		stats.ties = res.ties
-		stats.wins = res.wins
-		stats.total = res.total
-  })
-	})
-
-	function logOut () {
-		eraseCookie("token")
-		window.location.reload();
+	function logOut() {
+		if (auth) auth.token.value = null;
 	}
-
 
 	const triggerModal = (index: number) => (modals.value[index] = !modals.value[index]);
 
+	onMounted(() => {
+		auth?.forceUpdate();
+	});
 </script>
 
 <template>
-	<ProfileStats :stats="stats"/>
+	<ProfileStats :class="css.stats" :stats="auth?.stats.value || DefaultStats" />
 
 	<div :class="css.main__wrapper">
 		<figure :class="css.logo">
@@ -58,21 +42,25 @@ import { eraseCookie } from "../../utils/cookies";
 		</figure>
 
 		<main :class="css.main">
-			<template v-if="!authInfo?.isAuth">
-			<div :class="css.main__auth">
-				<Button @click="triggerModal(0)">Вход</Button>
-				<Button @click="triggerModal(1)">Регистрация</Button>
-			</div>
+			<template v-if="!auth?.token.value">
+				<div :class="css.main__auth">
+					<Button @click="() => addToast('Test text')">Вход</Button>
+					<Button @click="triggerModal(1)">Регистрация</Button>
+				</div>
 			</template>
 			<Button v-else @click="logOut">Выход</Button>
 			<Button @click="triggerModal(2)">Создать новую игру</Button>
 			<Button @click="triggerModal(3)">Присоединиться</Button>
 			<Button v-if="props?.isConnected" @click="router.push('/game')">Продолжить игру</Button>
 
-			<Modal :isOpen="modals[0]" @close="triggerModal(0)"><LoginForm @close="triggerModal(0)" type="Вход" /></Modal>
-			<Modal :isOpen="modals[1]" @close="triggerModal(1)"><LoginForm @close="triggerModal(1)" type="Регистрация" /></Modal>
+			<Modal :isOpen="modals[0]" @close="triggerModal(0)"
+				><LoginForm @close="triggerModal(0)" type="Вход"
+			/></Modal>
+			<Modal :isOpen="modals[1]" @close="triggerModal(1)"
+				><LoginForm @close="triggerModal(1)" type="Регистрация"
+			/></Modal>
 			<Modal :isOpen="modals[2]" @close="triggerModal(2)"><CreateGameForm /></Modal>
-			<Modal :isOpen="modals[3]" @close="triggerModal(3)"><ConnectGameForm/></Modal>
+			<Modal :isOpen="modals[3]" @close="triggerModal(3)"><ConnectGameForm /></Modal>
 		</main>
 	</div>
 </template>

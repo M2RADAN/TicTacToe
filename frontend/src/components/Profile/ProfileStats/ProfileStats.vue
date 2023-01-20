@@ -3,15 +3,14 @@
 	import { IStats } from "../../../types/game";
 	import css from "./ProfileStats.module.css";
 
-	const props = defineProps<{stats: IStats}>()
-	const titles = ref(["Выиграл", "Проиграл", "Всего"]);
-
+	const props = defineProps<{ stats: IStats }>();
+	const titles = ref(["Выиграл", "Проиграл", "Ничьи", "Всего"]);
 </script>
 
 <template>
 	<section :class="css.stats">
-		<template v-for="(el, index) in Object.keys(stats)">
-			<p :class="css.stats__title">{{ el }}:</p>
+		<template v-for="(el, index) of Object.keys(stats)">
+			<p :class="css.stats__title">{{ titles[index] }} :</p>
 			<p :class="css.stats__info">
 				{{ stats[el as keyof IStats] }}
 			</p>
